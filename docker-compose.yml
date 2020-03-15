@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  ckan-dev:
+    build:
+      context: ckan/
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .dev.env
+    links:
+      - db
+      - solr
+      - redis
+    ports:
+      - "0.0.0.0:5000:5000"
+    volumes:
+      - ./src:/srv/app/src_extensions
+      - ckan_storage:/var/lib/ckan
+
+  db:
+    container_name: db
+    env_file:
+      - .dev.env
+    build:
+      context: postgresql/
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  solr:
+    container_name: solr
+    build:
+      context: solr/
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+
+volumes:
+  ckan_storage:
+  pg_data:
