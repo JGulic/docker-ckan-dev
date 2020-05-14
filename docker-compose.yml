@@ -1,7 +1,8 @@
 version: "3"
 
 services:
-  ckan-dev:
+  ckan:
+    container_name: ckan
     build:
       context: ckan/
       dockerfile: Dockerfile.dev

@@ -28,16 +28,27 @@ then
     then
       # Generate htpasswd file for basicauth
       htpasswd -d -b -c /srv/app/.htpasswd $HTPASSWD_USER $HTPASSWD_PASSWORD
+      # Start supervisord
+      supervisord --configuration /etc/supervisord.conf &
+      # Start Varnish
+      varnishd -f /etc/varnish/default.vcl -s malloc,100M -a 0.0.0.0:5000
       # Start uwsgi with basicauth
+      #uwsgi --ini /srv/app/uwsgi.conf --pcre-jit $UWSGI_OPTS
       ckan --config=/srv/app/production.ini run
     else
       echo "Missing HTPASSWD_USER or HTPASSWD_PASSWORD environment variables. Exiting..."
       exit 1
     fi
   else
+    # Start supervisord
+    supervisord --configuration /etc/supervisord.conf &
+    # Start Varnish
+    varnishd -f /etc/varnish/default.vcl -s malloc,100M -a 0.0.0.0:5000
     # Start uwsgi
+    #uwsgi --ini /srv/app/uwsgi.conf --pcre-jit $UWSGI_OPTS
     ckan --config=/srv/app/production.ini run
   fi
 else
   echo "[prerun] failed...not starting CKAN."
 fi
+

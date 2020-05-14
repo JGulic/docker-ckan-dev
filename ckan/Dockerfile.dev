@@ -17,6 +17,7 @@ WORKDIR ${SRC_DIR}
 RUN apk add --no-cache \
         git \
         curl \
+	sudo \
         python3 \
         postgresql-dev \
         linux-headers \
@@ -71,6 +72,7 @@ RUN apk add --no-cache git \
         bash \
         gettext \
         curl \
+        su-exec \
         postgresql-client \
         python3 \
         libmagic \
@@ -134,3 +136,4 @@ HEALTHCHECK --interval=10s --timeout=5s --retries=5 CMD curl --fail http://local
 USER ckan
 
 CMD ["/srv/app/start_ckan.sh"]
+
